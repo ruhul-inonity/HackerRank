@@ -13,25 +13,49 @@ import java.util.Scanner;
 
 public class TheCoinChangeProblem {
     public static void main(String[] args) {
+
         Scanner scan = new Scanner(System.in);
-        int N = scan.nextInt();
-        int M = scan.nextInt();
-        int[] coins = new int[M];
-        for(int i = 0; i < M; i++) {
+        int n = scan.nextInt();
+        int m = scan.nextInt();
+        int [] coins = new int[m];
+        for (int i = 0; i < m; i++) {
             coins[i] = scan.nextInt();
         }
-        System.out.println(max(coins, N));
+        scan.close();
+
+        System.out.println(numWays(n, coins));
     }
 
-    public static int max(int[] coins, int N) {
-        int[] numCoins = new int[N+1];
-        numCoins[0] = 1;
-        for(int i = 0; i < coins.length; i++) {
-            for(int j = coins[i]; j < numCoins.length; j++) {
-               // System.out.println("num coins j "+numCoins[j]+" coins j - coins i "+numCoins[j - coins[i]]);
-                numCoins[j] += numCoins[j - coins[i]];
+    public static long numWays(int n, int [] coins) {
+        if (n < 0) {
+            return 0;
+        }
+        return numWays(n, coins, 0, new HashMap<String, Long>());
+    }
+
+    public static long numWays(int n, int [] coins, int coinNumber, HashMap<String, Long> cache) {
+
+        String key = n + "," + coinNumber;
+        if (cache.containsKey(key)) {
+            return cache.get(key);
+        }
+
+        if (coinNumber == coins.length - 1) {
+            if (n % coins[coinNumber] == 0) {
+                cache.put(key, 1L);
+                return 1;
+            } else {
+                cache.put(key, 0L);
+                return 0;
             }
         }
-        return numCoins[N];
+
+        long ways = 0;
+        for (int i = 0; i <= n; i += coins[coinNumber]) {
+            ways += numWays(n - i, coins, coinNumber + 1, cache);
+        }
+
+        cache.put(key, ways);
+        return ways;
     }
 }
