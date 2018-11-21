@@ -2,21 +2,22 @@ package algorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
- * Created by inonity on 11/28/17.
+ * Created by inonity on 11/22/18.
  */
 
-//https://www.hackerrank.com/challenges/coin-change/problem
 
 
 public class TheCoinChangeProblemGivenSum {
 
+    static ArrayList<ArrayList<Integer>> combList;
     static void sum_up_recursive(ArrayList<Integer> numbers, int target, ArrayList<Integer> partial) {
         int s = 0;
         for (int x: partial) s += x;
-        if (s == target)
-            System.out.println("sum("+Arrays.toString(partial.toArray())+")="+target);
+        if (s <= target)
+            combList.add(partial);
         if (s >= target)
             return;
         for(int i=0;i<numbers.size();i++) {
@@ -32,8 +33,13 @@ public class TheCoinChangeProblemGivenSum {
         sum_up_recursive(numbers,target,new ArrayList<Integer>());
     }
     public static void main(String args[]) {
+        combList = new ArrayList<>();
         Integer[] numbers = {3,9,8,4,5,7,10};
-        int target = 15;
+        int target = 20;
         sum_up(new ArrayList<Integer>(Arrays.asList(numbers)),target);
+
+        for (int i = 0; i < combList.size(); i++) {
+            System.out.println( combList.get(i).size());
+        }
     }
 }
